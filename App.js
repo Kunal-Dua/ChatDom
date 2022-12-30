@@ -12,11 +12,18 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#A020F0" },
+          headerTitleStyle: { color: "white" },
+          headerTint: { color: "white" },
+        }}
+      >
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="signUp" component={signUp} />
+        <Stack.Screen name="Register" component={signUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -25,7 +32,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "blue",
     alignItems: "center",
     justifyContent: "center",
   },
