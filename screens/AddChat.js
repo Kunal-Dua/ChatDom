@@ -13,9 +13,8 @@ const AddChat = ({ navigation }) => {
     const q = query(collection(db, "users"), where("emailID", "==", input));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      setUser(doc.data());
+        setUser(doc.data());
     });
-    console.log(user);
   };
 
   const handleAddUser = async () => {
@@ -34,7 +33,7 @@ const AddChat = ({ navigation }) => {
             [combinedID + ".userInfo"]: {
               uid: user.uid,
               name: user.name,
-              imageUrl: user.photoURL,
+              photoURL: user.photoURL,
               combinedID: combinedID,
             },
             [combinedID + ".date"]: serverTimestamp(),
@@ -44,7 +43,7 @@ const AddChat = ({ navigation }) => {
             [combinedID + ".userInfo"]: {
               uid: currentUser.uid,
               name: currentUser.name,
-              imageUrl: currentUser.photoURL,
+              photoURL: currentUser.photoURL,
               combinedID: combinedID,
             },
             [combinedID + ".date"]: serverTimestamp(),
@@ -77,7 +76,7 @@ const AddChat = ({ navigation }) => {
       {user && (
         <TouchableOpacity onPress={handleAddUser}>
           <View>
-            <Avatar rounded size={"medium"} source={user.photoURL} />
+            <Avatar rounded size={"medium"} source={user.photoURL.toString()} />
             <Text style={{ fontSize: "24", marginLeft: 20 }}>{user.name}</Text>
           </View>
         </TouchableOpacity>
