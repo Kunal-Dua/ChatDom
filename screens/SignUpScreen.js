@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,TouchableOpacity} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Button, Input } from "react-native-elements";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -12,14 +12,15 @@ const SignUpScreen = ({ navigation }) => {
   const [imageURL, setImageURL] = useState("");
 
   const signUp = async () => {
+    // if(imageURL == ""){
+    //   imageURL="https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg";
+    // }
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
-        const res = authUser.user.updateProfile({
-          displayName: name,
-          photoURL:
-            imageURL ||
-            "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
+        authUser.user.updateProfile({
+          name: name,
+          photoURL: imageURL.toString(),
         });
 
         navigation.goBack();
@@ -28,11 +29,11 @@ const SignUpScreen = ({ navigation }) => {
         //Creating user
         await setDoc(doc(db, "users", auth.currentUser.uid), {
           uid: auth.currentUser.uid,
-          name: name,
+          displayName:name,
           emailID: email,
           photoURL: imageURL,
         });
-
+        console.log("user name login : "+name);
         //Creating User Chats
         await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
       })
@@ -57,7 +58,7 @@ const SignUpScreen = ({ navigation }) => {
         type="name"
         value={name}
         autoFocus
-        onChangeText={(text) => setName(text.toLowerCase())}
+        onChangeText={(text) => setName(text)}
       ></Input>
       <Input
         placeholder="Enter Email ID"
@@ -73,8 +74,8 @@ const SignUpScreen = ({ navigation }) => {
         secureTextEntry
       ></Input>
       <Input
-        placeholder="Enter Image URL Optional"
-        type="image"
+        placeholder="Enter Image URL (Optional)"
+        type="imageURL"
         value={imageURL}
         onChangeText={(text) => setImageURL(text)}
       ></Input>
