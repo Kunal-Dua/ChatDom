@@ -70,7 +70,7 @@ const AddChat = ({ navigation }) => {
         type="name"
         value={input}
         autoFocus
-        onChangeText={(text) => setInput(text)}
+        onChangeText={(text) => setInput(text.toLowerCase())}
       ></Input>
       <Button style={styles.btn} title="Submit" onPress={submit} />
       {user && (

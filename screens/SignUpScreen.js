@@ -57,23 +57,23 @@ const SignUpScreen = ({ navigation }) => {
         type="name"
         value={name}
         autoFocus
-        onChangeText={(text) => setName(text)}
+        onChangeText={(text) => setName(text.toLowerCase())}
       ></Input>
       <Input
         placeholder="Enter Email ID"
         type="email"
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={(text) => setEmail(text.toLowerCase())}
       ></Input>
       <Input
         placeholder="Enter Password"
         type="password"
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={(text) => setPassword(text.toLowerCase())}
         secureTextEntry
       ></Input>
       <Input
-        placeholder="Enter Image URL"
+        placeholder="Enter Image URL Optional"
         type="image"
         value={imageURL}
         onChangeText={(text) => setImageURL(text)}

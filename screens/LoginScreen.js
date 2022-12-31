@@ -41,13 +41,13 @@ const LoginScreen = ({ navigation }) => {
           type="email"
           value={email}
           autoFocus
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text.toLowerCase())}
         ></Input>
         <Input
           placeholder="Enter Password"
           type="password"
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword(text.toLowerCase())}
           secureTextEntry
         ></Input>
       </View>
