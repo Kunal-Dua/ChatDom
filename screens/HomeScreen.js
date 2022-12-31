@@ -1,37 +1,67 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Avatar } from 'react-native-elements';
-import React from 'react'
-import {auth} from '../firebase'
+import { Avatar, Icon } from "react-native-elements";
+import React, { useLayoutEffect } from "react";
+import { auth } from "../firebase";
+import CustomListItem from "./CustomListItem";
+import AddChat from "./AddChat";
 
-const HomeScreen = () => {
-  const user=auth.currentUser;
+
+const HomeScreen = ({ navigation }) => {
+  const user = auth?.currentUser;
+  const addChat=()=>{
+    navigation.navigate("AddChat");
+  }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Chats",
+      headerStyle: { backgroundColor: "#fff" },
+      headerTitleStyle: { color: "black" },
+      headerTintColor: "black",
+      headerLeft: () => (
+        <View style={{ marginLeft: 10 }}>
+          <TouchableOpacity>
+            <Avatar
+              rounded
+              source={{
+                uri: user?.photoURL?.toString(),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerRight: () => (
+        <View>
+          <TouchableOpacity onPress={addChat}>
+            <Icon name="add" size={40} />
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+    
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <StatusBar style='light'/>
-      <View style={styles.banner}>
-        <Avatar source={user.photoURL.toString()} />
-<Text>fghjk</Text>
-      </View>
-      <View style={styles.inner_container}>
-      <Text>fghjk</Text>
+    <SafeAreaView>
+      <ScrollView>
+        <CustomListItem />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
-      </View>
-    </View>
-  )
-}
-
-export default HomeScreen
+export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container:{
-    margin:10,
+  container: {
+    margin: 10,
   },
-  inner_container:{
-
-  },
-  banner:{
-    height:50,
-
-  }
-})
+  inner_container: {},
+});

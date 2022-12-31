@@ -1,26 +1,40 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,TouchableOpacity} from "react-native";
 import { Button, Input } from "react-native-elements";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [imageURL, setImageURL] = useState(null);
 
-  const signUp = () => {
+  const signUp = async () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
-        authUser.user.updateProfile({
+        const res = authUser.user.updateProfile({
           displayName: name,
           photoURL:
             imageURL ||
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngitem.com%2Fmiddle%2FhwwTxRJ_person-man-user-account-profile-employee-profile-template%2F&psig=AOvVaw0jET3Kf3YBlKGNV5-2x2x4&ust=1672512849196000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjX8YOCovwCFQAAAAAdAAAAABAJ",
+            "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
         });
+
         navigation.goBack();
+      })
+      .then(async () => {
+        //Creating user
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+          uid: auth.currentUser.uid,
+          name: name,
+          emailID: email,
+          photoURL: imageURL,
+        });
+
+        //Creating User Chats
+        await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
       })
       .catch((error) => alert(error.message));
   };
