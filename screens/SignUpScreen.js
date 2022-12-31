@@ -33,7 +33,6 @@ const SignUpScreen = ({ navigation }) => {
             "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
         });
         //Creating User Chats
-        console.log("image " + auth.currentUser.photoURL);
         await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
         navigation.replace("Home");
       })

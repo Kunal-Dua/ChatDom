@@ -25,6 +25,7 @@ const AddChat = ({ navigation }) => {
     querySnapshot.forEach((doc) => {
       setUser(doc.data());
     });
+    console.log(user.photoURL.toString());
   };
 
   const handleAddUser = async () => {
@@ -37,7 +38,7 @@ const AddChat = ({ navigation }) => {
       if (!res.exists()) {
         // make chats collection if no chat between users
         await setDoc(doc(db, "chats", combinedID), { messages: [] });
-
+        console.log("user " + user.photoURL);
         // update doc for current user
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedID + ".userInfo"]: {
@@ -77,19 +78,27 @@ const AddChat = ({ navigation }) => {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Input
         placeholder="Enter Email Id"
         type="input"
         value={input}
         onChangeText={(text) => setInput(text.toLowerCase())}
         autoFocus
+        style={styles.inp}
       ></Input>
       <Button style={styles.btn} title="Submit" onPress={submit} />
       {user && (
         <TouchableOpacity onPress={handleAddUser}>
-          <View>
-            <Avatar rounded size={"medium"} source={user.photoURL.toString()} />
+          <Text style={styles.txtForUsers}>Users Found:-</Text>
+          <View style={styles.userToAdd}>
+            <Avatar
+              size={"medium"}
+              rounded
+              source={{
+                uri: user?.photoURL?.toString(),
+              }}
+            />
             <Text style={{ fontSize: "24", marginLeft: 20 }}>
               {user.displayName}
             </Text>
@@ -102,4 +111,27 @@ const AddChat = ({ navigation }) => {
 
 export default AddChat;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    margin: 20,
+  },
+  btn: {
+    width: 120,
+  },
+  txtForUsers:{
+    marginTop:15,
+    fontSize:22,
+  },
+  userToAdd: {
+    marginTop: 30,
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 100,
+    padding: 10,
+    width: 350,
+  },
+});
