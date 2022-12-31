@@ -19,6 +19,17 @@ const HomeScreen = ({ navigation }) => {
   const addChat=()=>{
     navigation.navigate("AddChat");
   }
+  const signOut=()=>{
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Login");
+        alert("Sign out successfull");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Chats",
@@ -27,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
       headerTintColor: "black",
       headerLeft: () => (
         <View style={{ marginLeft: 10 }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={signOut}>
             <Avatar
               rounded
               source={{

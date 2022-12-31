@@ -3,7 +3,7 @@ import { Button, Input } from "react-native-elements";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -12,30 +12,30 @@ const SignUpScreen = ({ navigation }) => {
   const [imageURL, setImageURL] = useState("");
 
   const signUp = async () => {
-    // if(imageURL == ""){
-    //   imageURL="https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg";
-    // }
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
         authUser.user.updateProfile({
-          name: name,
-          photoURL: imageURL.toString(),
+          displayName: name,
+          photoURL:
+            imageURL ||
+            "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
         });
-
-        navigation.goBack();
       })
       .then(async () => {
         //Creating user
         await setDoc(doc(db, "users", auth.currentUser.uid), {
           uid: auth.currentUser.uid,
-          displayName:name,
+          displayName: name,
           emailID: email,
-          photoURL: imageURL,
+          photoURL:
+            imageURL ||
+            "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
         });
-        console.log("user name login : "+name);
         //Creating User Chats
+        console.log("image " + auth.currentUser.photoURL);
         await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
+        navigation.replace("Home");
       })
       .catch((error) => alert(error.message));
   };

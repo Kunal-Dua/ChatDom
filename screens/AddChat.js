@@ -25,7 +25,6 @@ const AddChat = ({ navigation }) => {
     querySnapshot.forEach((doc) => {
       setUser(doc.data());
     });
-    console.log(user);
   };
 
   const handleAddUser = async () => {
@@ -33,7 +32,6 @@ const AddChat = ({ navigation }) => {
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
-    console.log(currentUser.displayName);
     try {
       const res = await getDoc(doc(db, "chats", combinedID));
       if (!res.exists()) {
@@ -42,7 +40,7 @@ const AddChat = ({ navigation }) => {
 
         // update doc for current user
         await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedID + ".userInfo1"]: {
+          [combinedID + ".userInfo"]: {
             uid: user.uid,
             displayName: user.displayName,
             photoURL: user.photoURL,
@@ -51,8 +49,9 @@ const AddChat = ({ navigation }) => {
           [combinedID + ".date"]: serverTimestamp(),
         });
 
+        // update doc for user
         await updateDoc(doc(db, "userChats", user.uid), {
-          [combinedID + ".userInfo2"]: {
+          [combinedID + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
