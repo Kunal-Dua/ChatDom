@@ -70,12 +70,13 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  const enterChat = (uid, displayName, photoURL, emailID) => {
+  const enterChat = (uid, displayName, photoURL,senderPhotoURL, emailID) => {
     navigation.navigate("Chat", {
       uid,
       displayName,
       photoURL,
       emailID,
+      senderPhotoURL,
     });
   };
 

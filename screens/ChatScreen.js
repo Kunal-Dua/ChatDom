@@ -57,14 +57,16 @@ const ChatScreen = ({ navigation, route }) => {
       await updateDoc(doc(db, "chats", route.params.uid), {
         messages: arrayUnion({
           senderID: auth.currentUser.uid,
-          displayName: route.params.displayName,
+          displayName: currentUser.displayName,
           message: input,
           timestamp: Timestamp.now(),
+          photoURL: currentUser.photoURL,
         }),
       });
       Keyboard.dismiss();
     }
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar style="auto" />
@@ -85,10 +87,34 @@ const ChatScreen = ({ navigation, route }) => {
                 currentUser.uid === data.senderID ? (
                   <View style={styles.user}>
                     <Text style={styles.userText}>{data.message}</Text>
+                    <Avatar
+                      rounded
+                      size={30}
+                      //WEB
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -15,
+                      }}
+                      position="absolute"
+                      bottom={-15}
+                      right={-15}
+                      source={{ uri: data.photoURL }}
+                    />
+                    {/* <Text style={styles.displayNameOnChat}> {data.displayName} </Text> */}
                   </View>
                 ) : (
                   <View style={styles.talkingTo}>
                     <Text style={styles.talkingToText}>{data.message}</Text>
+                    <Avatar
+                      rounded
+                      size={30}
+                      position="absolute"
+                      bottom={-15}
+                      right={-15}
+                      source={{ uri: data.photoURL }}
+                    />
+                    {/* <Text style={styles.displayNameOnChat}>{data.displayName}</Text> */}
                   </View>
                 )
               )}
@@ -102,6 +128,7 @@ const ChatScreen = ({ navigation, route }) => {
             style={styles.textInput}
             value={input}
             onChangeText={(text) => setInput(text)}
+            onSubmitEditing={sendMessage}
           />
           <TouchableOpacity
             onPress={sendMessage}
@@ -129,6 +156,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   user: {
+    marginTop: 15,
     padding: 15,
     backgroundColor: "#ECECEC",
     alignSelf: "flex-end",
@@ -161,6 +189,12 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "grey",
     borderRadius: 30,
+    marginTop: 10,
+  },
+  displayNameOnChat: {
+    position: "absolute",
+    bottom: -25,
+    right: 15,
   },
   footer: {
     flexDirection: "row",
