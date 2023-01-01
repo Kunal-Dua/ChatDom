@@ -70,11 +70,12 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  const enterChat = (uid,displayName,photoURL) => {
+  const enterChat = (uid,displayName,photoURL,emailID) => {
     navigation.navigate("Chat", {
       uid,
       displayName,
       photoURL,
+      emailID,
     });
   };
 
@@ -88,6 +89,7 @@ const HomeScreen = ({ navigation }) => {
               uid={chat[0]}
               displayName={chat[1].userInfo.displayName}
               photoURL={chat[1].userInfo.photoURL}
+              emailID={chat[1].userInfo.emailID}
               enterChat={enterChat}
             />
           ))}

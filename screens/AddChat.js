@@ -25,7 +25,6 @@ const AddChat = ({ navigation }) => {
     querySnapshot.forEach((doc) => {
       setUser(doc.data());
     });
-    console.log(user.photoURL.toString());
   };
 
   const handleAddUser = async () => {
