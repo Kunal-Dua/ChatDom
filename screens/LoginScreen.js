@@ -21,7 +21,7 @@ const LoginScreen = ({ navigation }) => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((authUser)=>{
-        console.log(authUser.user);
+        // console.log(authUser.user);
       })
       .catch((error) => {
         alert(error.message);

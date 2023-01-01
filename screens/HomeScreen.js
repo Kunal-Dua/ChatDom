@@ -8,18 +8,30 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Avatar, Icon } from "react-native-elements";
-import React, { useLayoutEffect } from "react";
-import { auth } from "../firebase";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { auth, db } from "../firebase";
 import CustomListItem from "./CustomListItem";
 import AddChat from "./AddChat";
-
+import { onSnapshot, doc } from "firebase/firestore";
 
 const HomeScreen = ({ navigation }) => {
-  const user = auth?.currentUser;
-  const addChat=()=>{
+  const currentUser = auth?.currentUser;
+  const addChat = () => {
     navigation.navigate("AddChat");
-  }
-  const signOut=()=>{
+  };
+
+  const [chats, setChats] = useState([]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(db, "userChats", currentUser.uid),
+      (doc) => {
+        setChats(doc.data());
+      }
+    );
+    return unsubscribe;
+  }, [currentUser.uid]);
+
+  const signOut = () => {
     auth
       .signOut()
       .then(() => {
@@ -29,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         alert(error.message);
       });
-  }
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Chats",
@@ -42,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
             <Avatar
               rounded
               source={{
-                uri: user?.photoURL?.toString(),
+                uri: currentUser?.photoURL?.toString(),
               }}
             />
           </TouchableOpacity>
@@ -56,13 +68,29 @@ const HomeScreen = ({ navigation }) => {
         </View>
       ),
     });
-    
   }, []);
+
+  const enterChat = (uid,displayName,photoURL) => {
+    navigation.navigate("Chat", {
+      uid,
+      displayName,
+      photoURL,
+    });
+  };
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <CustomListItem />
+      <ScrollView style={{height:"100%"}}>
+        {chats &&
+          Object?.entries(chats)?.map((chat) => (
+            <CustomListItem
+              key={chat[0]}
+              uid={chat[0]}
+              displayName={chat[1].userInfo.displayName}
+              photoURL={chat[1].userInfo.photoURL}
+              enterChat={enterChat}
+            />
+          ))}
       </ScrollView>
     </SafeAreaView>
   );
