@@ -28,6 +28,7 @@ const HomeScreen = ({ navigation }) => {
         setChats(doc.data());
       }
     );
+    console.log(chats);
     return unsubscribe;
   }, [currentUser.uid]);
 
@@ -70,13 +71,13 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  const enterChat = (uid, displayName, photoURL,senderPhotoURL, emailID) => {
+  const enterChat = (uid, displayName, photoURL,other,lastMessage) => {
     navigation.navigate("Chat", {
       uid,
       displayName,
       photoURL,
-      emailID,
-      senderPhotoURL,
+      other,
+      lastMessage,
     });
   };
 
@@ -90,9 +91,10 @@ const HomeScreen = ({ navigation }) => {
               <CustomListItem
                 key={chat[0]}
                 uid={chat[0]}
-                displayName={chat[1].userInfo.displayName}
-                photoURL={chat[1].userInfo.photoURL}
-                emailID={chat[1].userInfo.emailID}
+                displayName={chat[1]?.userInfo?.displayName}
+                photoURL={chat[1]?.userInfo?.photoURL}
+                other={chat[1]?.userInfo?.uid}
+                lastMessage={chat[1]?.lastMessage?.message}
                 enterChat={enterChat}
               />
             ))}

@@ -63,8 +63,25 @@ const ChatScreen = ({ navigation, route }) => {
           photoURL: currentUser.photoURL,
         }),
       });
-      Keyboard.dismiss();
     }
+    try {
+      await updateDoc(doc(db, "userChats", currentUser.uid), {
+        [route.params.uid + ".lastMessage"]: {
+          message:input,
+        },
+        [route.params.uid + ".date"]: Timestamp.now(),
+      });
+
+      await updateDoc(doc(db, "userChats", route.params.other), {
+        [route.params.uid + ".lastMessage"]: {
+          message:input,
+        },
+        [route.params.uid + ".date"]: Timestamp.now(),
+      });
+    } catch (error) {
+      alert(error.message)
+    }
+    Keyboard.dismiss();
   };
 
   return (
@@ -109,6 +126,12 @@ const ChatScreen = ({ navigation, route }) => {
                     <Avatar
                       rounded
                       size={30}
+                      //WEB
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -15,
+                      }}
                       position="absolute"
                       bottom={-15}
                       right={-15}

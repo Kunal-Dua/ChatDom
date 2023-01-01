@@ -49,6 +49,7 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text.toLowerCase())}
           secureTextEntry
+          onSubmitEditing={signIn}
         ></Input>
       </View>
       <Button style={styles.btn} title="Sign In" onPress={signIn} />
