@@ -1,5 +1,5 @@
 import { Keyboard, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Icon, Input } from "react-native-elements";
 import {
   KeyboardAvoidingView,
@@ -16,11 +16,13 @@ import {
   arrayUnion,
   Timestamp,
 } from "firebase/firestore";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const ChatScreen = ({ navigation, route }) => {
   const currentUser = auth.currentUser;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const scrollViewRef = useRef();
 
   useLayoutEffect(() => {
     const unsubscribe = onSnapshot(
@@ -28,9 +30,14 @@ const ChatScreen = ({ navigation, route }) => {
       (doc) => {
         doc.exists() && setMessages(doc.data().messages);
       }
-      );
+    );
     return unsubscribe;
   }, [route.params.uid]);
+
+  // useEffect(() => {
+  //   ref.current?.scrollIntoView({behavior:"smooth"});
+  //   console.log("gdfhvjbkn");
+  // }, [messages])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,14 +70,18 @@ const ChatScreen = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar style="light" />
+      <StatusBar style="auto" />
       <KeyboardAvoidingView
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
         keyboardVerticalOffset={100}
       >
-        <>
-          <ScrollView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <>
+            <ScrollView
+              ref={scrollViewRef}
+              onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+            >
               {messages.map((data) =>
                 currentUser.uid === data.senderID ? (
                   <View style={styles.user}>
@@ -82,19 +93,25 @@ const ChatScreen = ({ navigation, route }) => {
                   </View>
                 )
               )}
-          </ScrollView>
-          <View style={styles.footer}>
-            <Input
-              placeholder={"Enter message"}
-              style={styles.textInput}
-              value={input}
-              onChangeText={(text) => setInput(text)}
-            />
-            <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
-              <Icon name="send" size={24} color="#2B68E6" />
-            </TouchableOpacity>
-          </View>
-        </>
+            </ScrollView>
+          </>
+        </TouchableWithoutFeedback>
+
+        <View style={styles.footer}>
+          <Input
+            placeholder={"Enter message"}
+            style={styles.textInput}
+            value={input}
+            onChangeText={(text) => setInput(text)}
+          />
+          <TouchableOpacity
+            onPress={sendMessage}
+            activeOpacity={0.5}
+            style={{ marginBottom: 80 }}
+          >
+            <Icon name="send" size={24} color="#2B68E6" />
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -112,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  user:{
+  user: {
     padding: 15,
     backgroundColor: "#ECECEC",
     alignSelf: "flex-end",
@@ -122,8 +139,8 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     position: "relative",
   },
-  userText:{},
-  talkingTo:{
+  userText: {},
+  talkingTo: {
     padding: 15,
     backgroundColor: "#00FF00",
     alignSelf: "flex-start",
@@ -133,9 +150,9 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     position: "relative",
   },
-  talkingToText:{},
+  talkingToText: {},
   textInput: {
-    bottom: 0,
+    bottom: 40,
     height: 40,
     flex: 1,
     marginRight: 15,
@@ -149,7 +166,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
+    width: "90%",
     padding: 15,
+    alignContent: "center",
   },
 });
