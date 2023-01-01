@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  const enterChat = (uid,displayName,photoURL,emailID) => {
+  const enterChat = (uid, displayName, photoURL, emailID) => {
     navigation.navigate("Chat", {
       uid,
       displayName,
@@ -81,18 +81,20 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView style={{height:"100%"}}>
+      <ScrollView style={{ height: "100%" }}>
         {chats &&
-          Object?.entries(chats)?.map((chat) => (
-            <CustomListItem
-              key={chat[0]}
-              uid={chat[0]}
-              displayName={chat[1].userInfo.displayName}
-              photoURL={chat[1].userInfo.photoURL}
-              emailID={chat[1].userInfo.emailID}
-              enterChat={enterChat}
-            />
-          ))}
+          Object?.entries(chats)
+            ?.sort((a, b) => a[1].date - b[1].date)
+            ?.map((chat) => (
+              <CustomListItem
+                key={chat[0]}
+                uid={chat[0]}
+                displayName={chat[1].userInfo.displayName}
+                photoURL={chat[1].userInfo.photoURL}
+                emailID={chat[1].userInfo.emailID}
+                enterChat={enterChat}
+              />
+            ))}
       </ScrollView>
     </SafeAreaView>
   );
