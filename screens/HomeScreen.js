@@ -84,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView style={{ height: "100%" }}>
         {chats &&
           Object?.entries(chats)
-            ?.sort((a, b) => a[1].date - b[1].date)
+            ?.sort((a, b) => b[1].date - a[1].date)
             ?.map((chat) => (
               <CustomListItem
                 key={chat[0]}
