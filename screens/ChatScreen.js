@@ -34,11 +34,6 @@ const ChatScreen = ({ navigation, route }) => {
     return unsubscribe;
   }, [route.params.uid]);
 
-  // useEffect(() => {
-  //   ref.current?.scrollIntoView({behavior:"smooth"});
-  //   console.log("gdfhvjbkn");
-  // }, [messages])
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisible: false,
@@ -57,16 +52,18 @@ const ChatScreen = ({ navigation, route }) => {
   }, [navigation]);
 
   const sendMessage = async () => {
-    setInput("");
-    await updateDoc(doc(db, "chats", route.params.uid), {
-      messages: arrayUnion({
-        senderID: auth.currentUser.uid,
-        displayName: route.params.displayName,
-        message: input,
-        timestamp: Timestamp.now(),
-      }),
-    });
-    Keyboard.dismiss();
+    if (input !== "") {
+      setInput("");
+      await updateDoc(doc(db, "chats", route.params.uid), {
+        messages: arrayUnion({
+          senderID: auth.currentUser.uid,
+          displayName: route.params.displayName,
+          message: input,
+          timestamp: Timestamp.now(),
+        }),
+      });
+      Keyboard.dismiss();
+    }
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -80,7 +77,9 @@ const ChatScreen = ({ navigation, route }) => {
           <>
             <ScrollView
               ref={scrollViewRef}
-              onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+              onContentSizeChange={() =>
+                scrollViewRef.current.scrollToEnd({ animated: true })
+              }
             >
               {messages.map((data) =>
                 currentUser.uid === data.senderID ? (
