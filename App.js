@@ -7,6 +7,7 @@ import Home from "./screens/HomeScreen";
 import Login from "./screens/LoginScreen";
 import signUp from "./screens/SignUpScreen";
 import AddChat from "./screens/AddChat";
+import AddGroup from "./screens/AddGroupScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={signUp} />
         <Stack.Screen name="AddChat" component={AddChat} />
+        <Stack.Screen name="AddGroup" component={AddGroup} />
       </Stack.Navigator>
     </NavigationContainer>
   );

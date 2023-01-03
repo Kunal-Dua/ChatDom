@@ -2,9 +2,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { Avatar, Icon, ListItem } from "react-native-elements";
 import React from "react";
 
-const CustomListItem = ({ uid, displayName, photoURL,other,enterChat,lastMessage }) => {
+const CustomListItem = ({ uid, displayName, photoURL,other,enterChat,lastMessage,group }) => {
+  // console.log("in CustomListItem "+displayName)
   return (
-    <ListItem onPress={()=>{enterChat(uid,displayName,photoURL,other,lastMessage)}} bottomDivider>
+    <ListItem onPress={()=>{enterChat(uid,displayName,photoURL,other,lastMessage,group)}} bottomDivider>
       <Avatar
         size={"medium"}
         rounded

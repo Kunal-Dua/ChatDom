@@ -23,6 +23,7 @@ const ChatScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const scrollViewRef = useRef();
+  const isGroup = route.params.group;
 
   useLayoutEffect(() => {
     const unsubscribe = onSnapshot(
@@ -51,7 +52,41 @@ const ChatScreen = ({ navigation, route }) => {
     });
   }, [navigation]);
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
+    if (isGroup) {
+      sendMessageGroup();
+    } else {
+      sendMessageUser();
+    }
+  };
+
+  const sendMessageGroup = async () => {
+    if (input !== "") {
+      setInput("");
+      await updateDoc(doc(db, "chats", route.params.uid), {
+        messages: arrayUnion({
+          senderID: auth.currentUser.uid,
+          displayName: currentUser.displayName,
+          message: input,
+          timestamp: Timestamp.now(),
+          photoURL: currentUser.photoURL,
+        }),
+      });
+    }
+    try {
+      await updateDoc(doc(db, "groupChats", route.params.uid), {
+        "lastMessage": {
+          message: input,
+        },
+        "date": Timestamp.now(),
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+    Keyboard.dismiss();
+  };
+
+  const sendMessageUser = async () => {
     if (input !== "") {
       setInput("");
       await updateDoc(doc(db, "chats", route.params.uid), {
@@ -67,19 +102,19 @@ const ChatScreen = ({ navigation, route }) => {
     try {
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [route.params.uid + ".lastMessage"]: {
-          message:input,
+          message: input,
         },
         [route.params.uid + ".date"]: Timestamp.now(),
       });
 
       await updateDoc(doc(db, "userChats", route.params.other), {
         [route.params.uid + ".lastMessage"]: {
-          message:input,
+          message: input,
         },
         [route.params.uid + ".date"]: Timestamp.now(),
       });
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
     }
     Keyboard.dismiss();
   };
@@ -100,6 +135,7 @@ const ChatScreen = ({ navigation, route }) => {
                 scrollViewRef.current.scrollToEnd({ animated: true })
               }
             >
+              {/* {messages?.map((data) => console.log(data))} */}
               {messages.map((data) =>
                 currentUser.uid === data.senderID ? (
                   <View style={styles.user}>
@@ -118,7 +154,7 @@ const ChatScreen = ({ navigation, route }) => {
                       right={-15}
                       source={{ uri: data.photoURL }}
                     />
-                    {/* <Text style={styles.displayNameOnChat}> {data.displayName} </Text> */}
+                    {/* <Text style={styles.displayNameOnChat}>{" "}{data.displayName}{" "}</Text> */}
                   </View>
                 ) : (
                   <View style={styles.talkingTo}>

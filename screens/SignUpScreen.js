@@ -3,7 +3,7 @@ import { Button, Input } from "react-native-elements";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../firebase";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, addDoc, collection } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -31,12 +31,14 @@ const SignUpScreen = ({ navigation }) => {
           photoURL:
             imageURL ||
             "https://www.shutterstock.com/image-vector/person-gray-photo-placeholder-man-260nw-1406263799.jpg",
+          groupUID: [],
         });
+
         //Creating User Chats
         await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
         navigation.replace("Home");
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => alert(error.message), navigation.navigate("Login"));
   };
 
   return (
