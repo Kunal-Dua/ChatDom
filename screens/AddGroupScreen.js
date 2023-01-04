@@ -46,15 +46,13 @@ const AddGroupScreen = ({ navigation }) => {
     try {
       const res = await addDoc(collection(db, "group"), {});
       await updateDoc(doc(db, "group", res.id), {
-        ["groupInfo"]: {
-          groupName: groupName,
-          groupPhotoURL:
-            groupPhotoURL ||
-            "https://img.freepik.com/premium-photo/fire-alphabet-letter-g-isolated-black-background_564276-8948.jpg?w=2000",
-          groupAdmin: currentUser.uid,
-          groupAdminName: currentUser.displayName,
-          totalGroupMembers: 2,
-        },
+        displayName: groupName,
+        groupAdmin: currentUser.uid,
+        groupAdminName: currentUser.displayName,
+        totalGroupMembers: 2,
+        photoURL:
+          groupPhotoURL ||
+          "https://img.freepik.com/premium-photo/fire-alphabet-letter-g-isolated-black-background_564276-8948.jpg?w=2000",
         groupMembersUID: arrayUnion(currentUser.uid, user.uid),
         groupMembersName: arrayUnion(currentUser.displayName, user.displayName),
         lastMessage: "You are added to Group",
@@ -65,12 +63,10 @@ const AddGroupScreen = ({ navigation }) => {
 
       await updateDoc(doc(db, "groupChats", res.id), {
         uid: res.id,
-        ["userInfo"]: {
-          displayName: groupName,
-          photoURL:
-            groupPhotoURL ||
-            "https://img.freepik.com/premium-photo/fire-alphabet-letter-g-isolated-black-background_564276-8948.jpg?w=2000",
-        },
+        displayName: groupName,
+        photoURL:
+          groupPhotoURL ||
+          "https://img.freepik.com/premium-photo/fire-alphabet-letter-g-isolated-black-background_564276-8948.jpg?w=2000",
         ["date"]: Timestamp.now(),
         ["lastMessage"]: {
           message: "You are added to Group",

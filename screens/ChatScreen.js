@@ -1,4 +1,5 @@
 import { Keyboard, StyleSheet, Text, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Icon, Input } from "react-native-elements";
 import {
@@ -19,6 +20,7 @@ import {
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const ChatScreen = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const currentUser = auth.currentUser;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -70,7 +72,7 @@ const ChatScreen = ({ navigation, route }) => {
         ),
       });
     }
-  }, [navigation]);
+  }, [navigation,isFocused]);
 
   const sendMessage = () => {
     if (isGroup) {

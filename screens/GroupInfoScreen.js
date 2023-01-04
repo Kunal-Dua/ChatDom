@@ -22,11 +22,14 @@ import {
   increment,
 } from "firebase/firestore";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { async } from "@firebase/util";
 
 const GroupInfoScreen = ({ navigation, route }) => {
   const currentUser = auth?.currentUser; //current user auth data
   const [user, setUser] = useState("");
   const [input_emailID, setInput_emailID] = useState("");
+  const [input_DP, setInput_DP] = useState("");
+  const [input_Name, setInput_Name] = useState("");
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisible: false,
@@ -45,9 +48,7 @@ const GroupInfoScreen = ({ navigation, route }) => {
   const handleAddUser = async () => {
     try {
       await updateDoc(doc(db, "group", route.params.uid), {
-        ["groupInfo"]: {
-          totalGroupMembers: increment(1),
-        },
+        totalGroupMembers: increment(1),
         groupMembersUID: arrayUnion(user.uid),
         groupMembersName: arrayUnion(user.displayName),
       });
@@ -73,8 +74,49 @@ const GroupInfoScreen = ({ navigation, route }) => {
     });
     console.log(user);
   };
+
+  const changeName = async () => {
+    if (input_Name != "") {
+      try {
+        await updateDoc(doc(db, "group", route.params.uid), {
+          displayName: input_Name,
+        });
+
+        await updateDoc(doc(db, "groupChats", route.params.uid), {
+          displayName: input_Name,
+        });
+
+        navigation.goBack();
+      } catch (error) {
+        alert(error.message);
+      }
+    } else {
+      alert("Empty Input not allowed");
+    }
+  };
+
+  const changeDP = async () => {
+    if (input_DP != "") {
+      try {
+        await updateDoc(doc(db, "group", route.params.uid), {
+          photoURL: input_DP,
+        });
+
+        await updateDoc(doc(db, "groupChats", route.params.uid), {
+          photoURL: input_DP,
+        });
+
+        navigation.goBack();
+      } catch (error) {
+        alert(error.message);
+      }
+    } else {
+      alert("Empty Input not allowed");
+    }
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <Input
         placeholder="Add new user to group"
         type="password"
@@ -85,21 +127,41 @@ const GroupInfoScreen = ({ navigation, route }) => {
       <Button title={"Add user"} onPress={addUserButton} />
       {user && (
         <TouchableOpacity onPress={handleAddUser}>
-          <Text style={styles.txtForUsers}>Users Found:-</Text>
-          <View style={styles.userToAdd}>
-            <Avatar
-              size={"medium"}
-              rounded
-              source={{
-                uri: user?.photoURL?.toString(),
-              }}
-            />
-            <Text style={{ fontSize: "24", marginLeft: 20 }}>
-              {user.displayName}
-            </Text>
+          <View style={{ margin: 20 }}>
+            <Text style={styles.txtForUsers}>Users Found:-</Text>
+            <View style={styles.userToAdd}>
+              <Avatar
+                size={"medium"}
+                rounded
+                source={{
+                  uri: user?.photoURL?.toString(),
+                }}
+              />
+              <Text style={{ fontSize: "24", marginLeft: 20 }}>
+                {user.displayName}
+              </Text>
+            </View>
           </View>
         </TouchableOpacity>
       )}
+      <View style={{ marginTop: 40 }} />
+      <Input
+        placeholder="Change Group Name"
+        type="input_DP"
+        value={input_Name}
+        onChangeText={(text) => setInput_Name(text)}
+        onSubmitEditing={changeName}
+      />
+      <Button title={"Change Name"} onPress={changeName} />
+      <View style={{ marginTop: 40 }} />
+      <Input
+        placeholder="New Group Display Picture"
+        type="input_DP"
+        value={input_DP}
+        onChangeText={(text) => setInput_DP(text)}
+        onSubmitEditing={changeDP}
+      />
+      <Button title={"Change Picture"} onPress={changeDP} />
     </View>
   );
 };
@@ -107,19 +169,24 @@ const GroupInfoScreen = ({ navigation, route }) => {
 export default GroupInfoScreen;
 
 const styles = StyleSheet.create({
-    container:{
-        alignItems: "center",
-        margin: 20,
-    },
-    userToAdd: {
-        marginTop: 30,
-        alignItems: "center",
-        display: "flex",
-        flexDirection: "row",
-        borderColor: "grey",
-        borderWidth: 1,
-        borderRadius: 100,
-        padding: 10,
-        width: 350,
-      },
+  container: {
+    alignItems: "center",
+    margin: 20,
+  },
+  txtForUsers: {
+    marginTop: 15,
+    fontSize: 22,
+    marginLeft: 20,
+  },
+  userToAdd: {
+    marginTop: 30,
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 100,
+    padding: 10,
+    width: 350,
+  },
 });

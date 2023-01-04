@@ -154,8 +154,8 @@ const HomeScreen = ({ navigation }) => {
             <CustomListItem
               key={chat?.uid}
               uid={chat?.uid}
-              displayName={chat?.userInfo?.displayName}
-              photoURL={chat?.userInfo?.photoURL}
+              displayName={chat?.displayName}
+              photoURL={chat?.photoURL}
               other={chat?.uid}
               lastMessage={chat?.lastMessage?.message}
               group={true}
