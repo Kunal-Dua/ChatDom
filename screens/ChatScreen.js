@@ -1,4 +1,4 @@
-import { Keyboard, StyleSheet, Text, View } from "react-native";
+import { Keyboard, Platform, StyleSheet, Text, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Icon, Input } from "react-native-elements";
@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  TextInput,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { db, auth } from "../firebase";
@@ -17,7 +19,6 @@ import {
   arrayUnion,
   Timestamp,
 } from "firebase/firestore";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const ChatScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -72,7 +73,7 @@ const ChatScreen = ({ navigation, route }) => {
         ),
       });
     }
-  }, [navigation,isFocused]);
+  }, [navigation, isFocused]);
 
   const sendMessage = () => {
     if (isGroup) {
@@ -145,9 +146,9 @@ const ChatScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar style="auto" />
       <KeyboardAvoidingView
-        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={90}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
@@ -202,25 +203,21 @@ const ChatScreen = ({ navigation, route }) => {
                 )
               )}
             </ScrollView>
+            <View style={styles.footer}>
+              <TextInput
+                placeholder={"Enter message"}
+                style={styles.textInput}
+                value={input}
+                onChangeText={(text) => setInput(text)}
+                onSubmitEditing={sendMessage}
+              />
+              <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
+                <Icon name="send" size={24} color="#2B68E6" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.bottom}></View>
           </>
         </TouchableWithoutFeedback>
-
-        <View style={styles.footer}>
-          <Input
-            placeholder={"Enter message"}
-            style={styles.textInput}
-            value={input}
-            onChangeText={(text) => setInput(text)}
-            onSubmitEditing={sendMessage}
-          />
-          <TouchableOpacity
-            onPress={sendMessage}
-            activeOpacity={0.5}
-            style={{ marginBottom: 80 }}
-          >
-            <Icon name="send" size={24} color="#2B68E6" />
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -231,7 +228,7 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    padding:15,
   },
   title: {
     display: "flex",
@@ -265,13 +262,12 @@ const styles = StyleSheet.create({
   },
   talkingToText: {},
   textInput: {
-    bottom: 40,
+    bottom: 0,
     height: 40,
     flex: 1,
     marginRight: 15,
     borderColor: "transparent",
     backgroundColor: "#ECECEC",
-    borderWidth: 3,
     padding: 10,
     color: "grey",
     borderRadius: 30,
@@ -285,8 +281,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
     alignItems: "center",
-    width: "90%",
+    width: "100%",
     padding: 15,
-    alignContent: "center",
   },
 });
