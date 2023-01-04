@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Avatar, Button, Input } from "react-native-elements";
 import React, { useLayoutEffect, useState } from "react";
 import { auth, db } from "../firebase";
+import { StatusBar } from "expo-status-bar";
 import {
   collection,
   query,
@@ -63,8 +64,8 @@ const AddGroupScreen = ({ navigation }) => {
       await setDoc(doc(db, "groupChats", res.id), {});
 
       await updateDoc(doc(db, "groupChats", res.id), {
+        uid: res.id,
         ["userInfo"]: {
-          uid: res.id,
           displayName: groupName,
           photoURL:
             groupPhotoURL ||

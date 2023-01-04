@@ -24,6 +24,8 @@ const ChatScreen = ({ navigation, route }) => {
   const [input, setInput] = useState("");
   const scrollViewRef = useRef();
   const isGroup = route.params.group;
+  const uid = route.params.uid;
+  const displayName = route.params.displayName;
 
   useLayoutEffect(() => {
     const unsubscribe = onSnapshot(
@@ -47,6 +49,21 @@ const ChatScreen = ({ navigation, route }) => {
           <Text style={{ marginLeft: 5, fontSize: 18 }}>
             {route.params.displayName}
           </Text>
+        </View>
+      ),
+      headerRight: () => (
+        <View style={styles.headerRight}>
+          <Icon
+            name="edit"
+            onPress={() => {
+              isGroup
+                ? navigation.navigate("GroupInfo", {
+                    uid,
+                    displayName,
+                  })
+                : navigation.navigate("Home");
+            }}
+          />
         </View>
       ),
     });
@@ -75,10 +92,10 @@ const ChatScreen = ({ navigation, route }) => {
     }
     try {
       await updateDoc(doc(db, "groupChats", route.params.uid), {
-        "lastMessage": {
+        lastMessage: {
           message: input,
         },
-        "date": Timestamp.now(),
+        date: Timestamp.now(),
       });
     } catch (error) {
       alert(error.message);
@@ -173,7 +190,7 @@ const ChatScreen = ({ navigation, route }) => {
                       right={-15}
                       source={{ uri: data.photoURL }}
                     />
-                    {/* <Text style={styles.displayNameOnChat}>{data.displayName}</Text> */}
+                    <Text style={styles.displayNameOnChat}>{data.displayName}</Text>
                   </View>
                 )
               )}
@@ -213,6 +230,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+  },
+  headerRight: {
+    marginRight: 20,
   },
   user: {
     marginTop: 15,

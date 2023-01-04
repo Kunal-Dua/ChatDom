@@ -8,6 +8,8 @@ import Login from "./screens/LoginScreen";
 import signUp from "./screens/SignUpScreen";
 import AddChat from "./screens/AddChat";
 import AddGroup from "./screens/AddGroupScreen";
+import AddUserToGroup from "./screens/AddUserToGroupScreen"
+import GroupInfo from "./screens/GroupInfoScreen"
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,8 @@ export default function App() {
         <Stack.Screen name="Register" component={signUp} />
         <Stack.Screen name="AddChat" component={AddChat} />
         <Stack.Screen name="AddGroup" component={AddGroup} />
+        <Stack.Screen name="AddUserToGroup" component={AddUserToGroup} />
+        <Stack.Screen name="GroupInfo" component={GroupInfo} />
       </Stack.Navigator>
     </NavigationContainer>
   );

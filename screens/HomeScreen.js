@@ -24,13 +24,12 @@ const HomeScreen = ({ navigation }) => {
 
   const addChat = () => {
     navigation.navigate("AddChat");
-    // to add more chats 
+    // to add more chats
   };
 
-  const getGroupUIDS = async () => { 
-
+  const getGroupUIDS = async () => {
     const snap = await db
-      .collection("users", currentUser.uid)
+      .collection("users", currentUser?.uid)
       .where("displayName", "==", currentUser.displayName)
       .get(); // gets groupIDS array from user db
 
@@ -40,12 +39,22 @@ const HomeScreen = ({ navigation }) => {
         groupUIDS.push(x); //pushes groupIDS to groupIDS array
       }
     });
-
-    const snap2 = await db.collection("groupChats", groupUIDS).get(); //gets group chats from groupIDS array of current user
-    snap2.forEach((doc) => {
-      groupChat.push(doc.data()); //pushes group chat to groupChat array
-    });
+    
+    // console.log(groupUIDS);
+    for (let x of groupUIDS) {
+      // console.log(x);
+      const snap2 = await db
+        .collection("groupChats", x)
+        .where("uid", "==", x)
+        .get(); //gets group chats from groupIDS array of current user
+        
+      snap2.forEach((doc) => {
+        // console.log(doc.data());
+        groupChat.push(doc.data()); //pushes group chat to groupChat array
+      });
+    }
     setGroupChats1(groupChat); //pushes group chat array to groupChat state
+    // console.log(groupChats1);
   };
 
   useEffect(() => {
@@ -60,9 +69,9 @@ const HomeScreen = ({ navigation }) => {
   }, [currentUser?.uid]);
 
   useEffect(() => {
-    getGroupUIDS();//gets group IDS array from user db
-    //isFocused is used to update screen when screen is back from goBack funtion of chat screen it is being used as we are not using onsnapshot in group so we are able to get lastmessage update without isFousced 
-  }, [currentUser?.uid, isFocused]); 
+    getGroupUIDS(); //gets group IDS array from user db
+    //isFocused is used to update screen when screen is back from goBack funtion of chat screen it is being used as we are not using onsnapshot in group so we are able to get lastmessage update without isFousced
+  }, [currentUser?.uid,isFocused]);
 
   const signOut = () => {
     auth
@@ -121,33 +130,38 @@ const HomeScreen = ({ navigation }) => {
         {chats &&
           Object?.entries(chats) // Object entries used to access Object in  chats
             ?.sort((a, b) => b[1].date - a[1].date) //sorting using date of chat
-            ?.map((chat) => ( // map used to map chat array to display
-              <CustomListItem
-                key={chat[0]}
-                uid={chat[0]}
-                displayName={chat[1]?.userInfo?.displayName}
-                photoURL={chat[1]?.userInfo?.photoURL}
-                other={chat[1]?.userInfo?.uid}
-                lastMessage={chat[1]?.lastMessage?.message}
-                group={false}
-                enterChat={enterChat}
-              />
-            ))}
+            ?.map(
+              (
+                chat // map used to map chat array to display
+              ) => (
+                <CustomListItem
+                  key={chat[0]}
+                  uid={chat[0]}
+                  displayName={chat[1]?.userInfo?.displayName}
+                  photoURL={chat[1]?.userInfo?.photoURL}
+                  other={chat[1]?.userInfo?.uid}
+                  lastMessage={chat[1]?.lastMessage?.message}
+                  group={false}
+                  enterChat={enterChat}
+                />
+              )
+            )}
 
-        {/* {groupChats1.map((chat) => {console.log(chat?.lastMessage?.message);})} */}
-
-        {groupChats1 && groupChats1.map((chat) => (
-          <CustomListItem
-            key={chat?.userInfo?.uid}
-            uid={chat?.userInfo?.uid}
-            displayName={chat?.userInfo?.displayName}
-            photoURL={chat?.userInfo?.photoURL}
-            other={chat?.userInfo?.uid}
-            lastMessage={chat?.lastMessage?.message}
-            group={true}
-            enterChat={enterChat}
-          />
-        ))}
+        {/* {groupChats1.map((chat) => {console.log(chat)})} */}
+            {/* {console.log(groupChats1)} */}
+        {
+          groupChats1.map((chat) => (
+            <CustomListItem
+              key={chat?.uid}
+              uid={chat?.uid}
+              displayName={chat?.userInfo?.displayName}
+              photoURL={chat?.userInfo?.photoURL}
+              other={chat?.uid}
+              lastMessage={chat?.lastMessage?.message}
+              group={true}
+              enterChat={enterChat}
+            />
+          ))}
       </ScrollView>
     </SafeAreaView>
   );
