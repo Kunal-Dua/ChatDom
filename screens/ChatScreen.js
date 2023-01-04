@@ -51,22 +51,25 @@ const ChatScreen = ({ navigation, route }) => {
           </Text>
         </View>
       ),
-      headerRight: () => (
-        <View style={styles.headerRight}>
-          <Icon
-            name="edit"
-            onPress={() => {
-              isGroup
-                ? navigation.navigate("GroupInfo", {
-                    uid,
-                    displayName,
-                  })
-                : navigation.navigate("Home");
-            }}
-          />
-        </View>
-      ),
     });
+
+    if (isGroup) {
+      navigation.setOptions({
+        headerRight: () => (
+          <View style={styles.headerRight}>
+            <Icon
+              name="edit"
+              onPress={() => {
+                navigation.navigate("GroupInfo", {
+                  uid,
+                  displayName,
+                });
+              }}
+            />
+          </View>
+        ),
+      });
+    }
   }, [navigation]);
 
   const sendMessage = () => {
@@ -190,7 +193,9 @@ const ChatScreen = ({ navigation, route }) => {
                       right={-15}
                       source={{ uri: data.photoURL }}
                     />
-                    <Text style={styles.displayNameOnChat}>{data.displayName}</Text>
+                    <Text style={styles.displayNameOnChat}>
+                      {data.displayName}
+                    </Text>
                   </View>
                 )
               )}
