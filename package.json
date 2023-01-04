@@ -9,13 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/stack": "^6.3.10",
     "expo": "~47.0.9",
     "expo-status-bar": "~1.4.2",
     "firebase": "^9.15.0",
     "react": "18.1.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "18.1.0",
     "react-native": "0.70.5",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.8.0",
@@ -24,7 +25,8 @@
     "react-native-web": "^0.18.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "install-peers": "^1.0.4"
   },
   "private": true
 }
