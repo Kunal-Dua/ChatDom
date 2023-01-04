@@ -94,7 +94,7 @@ const AddGroupScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add user to Group",
-      headerStyle: { backgroundColor: "#fff" },
+      headerStyle: { backgroundColor: "#ADD8E6" },
       headerTitleStyle: { color: "black" },
       headerTintColor: "black",
     });

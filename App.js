@@ -8,8 +8,8 @@ import Login from "./screens/LoginScreen";
 import signUp from "./screens/SignUpScreen";
 import AddChat from "./screens/AddChat";
 import AddGroup from "./screens/AddGroupScreen";
-import AddUserToGroup from "./screens/AddUserToGroupScreen"
-import GroupInfo from "./screens/GroupInfoScreen"
+import AddUserToGroup from "./screens/AddUserToGroupScreen";
+import GroupInfo from "./screens/GroupInfoScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,9 +19,9 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{
-          headerStyle: { backgroundColor: "#A020F0" },
-          headerTitleStyle: { color: "white" },
-          headerTint: { color: "white" },
+          headerStyle: { backgroundColor: "#ADD8E6" },
+          headerTitleStyle: { color: "black" },
+          headerTintColor: "black",
         }}
       >
         <Stack.Screen name="Home" component={Home} />

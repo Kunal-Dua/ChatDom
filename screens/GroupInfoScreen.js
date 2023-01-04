@@ -33,7 +33,7 @@ const GroupInfoScreen = ({ navigation, route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisible: false,
-      headerStyle: { backgroundColor: "#fff" },
+      headerStyle: { backgroundColor: "#ADD8E6" },
       headerTitleStyle: { color: "black" },
       headerTintColor: "black",
       headerTitle: () => (

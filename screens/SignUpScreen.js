@@ -10,7 +10,14 @@ const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [imageURL, setImageURL] = useState("");
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Chats",
+      headerStyle: { backgroundColor: "#ADD8E6" },
+      headerTitleStyle: { color: "black" },
+      headerTintColor: "black",
+    });
+  }, []);
   const signUp = async () => {
     auth
       .createUserWithEmailAndPassword(email, password)

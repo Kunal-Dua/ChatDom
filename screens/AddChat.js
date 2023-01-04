@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Avatar, Button, Input } from "react-native-elements";
 import React, { useLayoutEffect, useState } from "react";
-import { auth, db,getAuth } from "../firebase";
+import { auth, db, getAuth } from "../firebase";
 import {
   collection,
   query,
@@ -37,7 +37,7 @@ const AddChat = ({ navigation }) => {
       if (!res.exists()) {
         // make chats collection if no chat between users
         await setDoc(doc(db, "chats", combinedID), { messages: [] });
-        
+
         // update doc for current user
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedID + ".userInfo"]: {
@@ -69,8 +69,8 @@ const AddChat = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Chats",
-      headerStyle: { backgroundColor: "#fff" },
+      title: "Add to Chat",
+      headerStyle: { backgroundColor: "#ADD8E6" },
       headerTitleStyle: { color: "black" },
       headerTintColor: "black",
     });
@@ -78,8 +78,13 @@ const AddChat = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Button title={"New Group"} style={styles.btn} onPress={()=>navigation.navigate("AddGroup")}/>
-      <Button title={"Search Group"} style={styles.btn} onPress={()=>navigation.navigate("AddGroup")}/>
+      <Button
+        title={"New Group"}
+        style={styles.btn}
+        onPress={() => navigation.navigate("AddGroup")}
+      />
+      <View style={{ marginTop: 80 }}></View>
+      <Text style={{ fontSize: 30 }}>{"Add new friend "}</Text>
       <Input
         placeholder="Enter Email Id"
         type="input"
@@ -113,16 +118,13 @@ const AddChat = ({ navigation }) => {
 export default AddChat;
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    margin: 20,
-  },
+  container: { marginTop: 80, alignItems: "center", margin: 20 },
   btn: {
     width: 120,
   },
-  txtForUsers:{
-    marginTop:15,
-    fontSize:22,
+  txtForUsers: {
+    marginTop: 15,
+    fontSize: 22,
   },
   userToAdd: {
     marginTop: 30,
