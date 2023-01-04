@@ -67,6 +67,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop:80,
     margin: 20,
     alignItems: "center",
   },
