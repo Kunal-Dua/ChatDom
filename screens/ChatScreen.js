@@ -146,9 +146,9 @@ const ChatScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar style="auto" />
       <KeyboardAvoidingView
-        behavior="position"
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
         style={styles.container}
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={90}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
   },
   talkingToText: {},
   textInput: {
-    bottom: 0,
     height: 40,
     flex: 1,
     marginRight: 15,
