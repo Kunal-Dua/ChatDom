@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }) => {
   const signIn = () => {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((authUser)=>{
+      .then((authUser) => {
         // console.log(authUser.user);
       })
       .catch((error) => {
@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <StatusBar style="light"/>
+      <StatusBar style="auto" />
       <Image
         source={require("../Images/chat_logo.png")}
         style={styles.logo}
@@ -67,7 +67,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:80,
+    marginTop: 80,
     margin: 20,
     alignItems: "center",
   },
